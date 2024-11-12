@@ -1,0 +1,70 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+  match /users/{userID} {
+  // Accessing User info
+  	allow create: if request.auth.uid == userID && //owner of document
+      validUserInfo(request.resource)
+    
+    allow update: if request.auth.uid == resource.data.userID && // can only edit your own
+    	//immutable
+    	request.resource.data.createdAt == resource.data.createdAt 
+    //TODO delete	
+		allow update: if false; 
+  }
+  // Accessing friends
+  match /friendships/{friendshipID}{
+  	//can only add or delete friendships if you are one of the participants
+  	allow create,delete: if request.auth != null && 
+    ( request.auth.uid == resource.data.user1Id ||
+    request.auth.uid == resource.data.user2Id ) &&
+    request.resource.data.friendsSince <= request.time //must be in the past
+    allow update: if false; 
+    
+  }
+  match /habits/{habitID} {
+  	allow read: if allowedToSeeHabit(request, resource, habitID, "TEMPORARYPLACEHOLDER" );
+    allow create: if isOwnerOfHabit(request,database,habitID);
+
+  }
+  
+  match /notifications/{notifID} {
+  // May need to check if some strings actually correspond to users?
+  	allow create,delete: if request.auth.uid == request.resource.data.senderId && // user is sender
+    	request.resource.data.sentAt <= request.time &&
+      request.resource.data.receiverId is string && // Do some exist thing?
+      ( request.resource.data.type == "friend request" || 
+      	(request.resource.data.type in ["habitInvite", "nudge"] && 
+        request.resource.data.habitId is string) // Do some exist thing?
+      ) 
+  }
+  
+    match /{document=**} {
+      allow write: if request.time < timestamp.date(2025, 1, 1); //CHANGE TO JUST READ WHEN READY TO TEST
+   		allow read 
+    }
+  }
+  
+  function validUserInfo(resource){
+  	return resource.data.createdAt <= request.time && //must be in the past
+      resource.data.displayName is string &&
+      resource.data.username is string &&
+      resource.data.username.size() < 25 &&
+      resource.data.picture is string
+  }
+  
+  function isOwnerOfHabit(request,db,habitID){
+  	let parID = request.auth.uid;
+    return exists(/databases/$(db)/documents/habits/$(habitID)) &&
+			get(/databases/$(db)/documents/habits/$(habitID)).data.participants[parID].isOwner == true;
+  }
+  
+  function allowedToSeeHabit(request,resource, habitID, habitOwnerID){
+  //unfinished
+  	let publicStatus = resource.data.participants[request.auth.uid].visibility;
+    // return publicStatus == habitID;
+    return true;
+  
+  }
+}
