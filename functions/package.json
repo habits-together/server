@@ -4,6 +4,8 @@
     "lint": "eslint --ext .js,.ts .",
     "build": "tsc",
     "build:watch": "tsc --watch",
+    "em": "firebase emulators:start --project habits-together",
+    "seed": "ts-node .\\src\\seedFirestore.ts",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
@@ -15,6 +17,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
+    "@faker-js/faker": "^9.3.0",
     "firebase-admin": "^12.6.0",
     "firebase-functions": "^6.0.1"
   },
