@@ -42,6 +42,16 @@ The emulators support data persistence to help maintain consistent test data:
 
 Note: The data directory is gitignored to prevent committing test data. New developers should run `npm run em:fresh` to generate their initial test data.
 
+### Cloud Functions Development
+
+When making changes to cloud functions, you need to rebuild the TypeScript files for the changes to take effect:
+
+```bash
+npm run build
+```
+
+This command should be run after making any changes to function code, as the emulator serves the compiled JavaScript files.
+
 ## Available Scripts
 
 - `npm run em` - Start emulators with data persistence

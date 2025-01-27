@@ -12,3 +12,7 @@ node_modules/
 serviceKey.json
 
 data/
+
+# Compiled JavaScript
+/lib
+*.js.map
