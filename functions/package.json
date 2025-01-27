@@ -6,7 +6,7 @@
     "build:watch": "tsc --watch",
     "em": "firebase emulators:start --import=./data --export-on-exit=./data",
     "em:fresh": "(sleep 5 && npm run seed)& firebase emulators:start --export-on-exit=./data",
-    "seed": "npx ts-node ./src/seedFirestore.ts",
+    "seed": "npx ts-node ./src/scripts/seedFirestore.ts",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
