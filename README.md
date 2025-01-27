@@ -1,18 +1,74 @@
+# Habits Together Server
 
--   setup
-    - Use node **v18.20.5**
-    - `npm install`
-    -   get `ts-node`
-    -   get `serviceKey.json` from a trusted source (discord) and put in the the functions directory
-        -   `export GOOGLE_APPLICATION_CREDENTIALS="path/to/serviceKey.json"` (unix)
-        -   `$env:GOOGLE_APPLICATION_CREDENTIALS="path\to\serviceKey.json"` (powershell)
-        -   `set GOOGLE_APPLICATION_CREDENTIALS="path\to\serviceKey.json"` (cmd)
+This is the Firebase backend for the Habits Together app. It uses Firebase Cloud Functions and Firestore for data storage.
 
--   start emulator
-    -   `cd .\functions\`
-    -   `npm run em`
-    -   make sure firestore running on port `8080`
-        -   if not, make sure port is free
-            -   **windows** -> `netstat -ano | findstr :8080`. Find the `pid` of the thing occupying the port. Then run `taskkill /PID <pid> /F`.
-        -   restart the emulator
-    -   to populate the emulator firestore run `npm run seed` in a different terminal.
+## Prerequisites
+
+- Node.js v18.20.5 (use nvm to manage Node versions)
+- Firebase CLI (`npm install -g firebase-tools`)
+- Firebase project credentials (`serviceKey.json`)
+
+## Setup
+
+1. Navigate to the functions directory:
+
+```bash
+cd functions
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Create a `.env` file in the `functions` directory:
+
+```bash
+GOOGLE_APPLICATION_CREDENTIALS="./serviceKey.json"
+```
+
+4. Place your `serviceKey.json` in the `functions` directory (obtain this from a team member)
+
+## Development
+
+### Emulator Data Management
+
+The emulators support data persistence to help maintain consistent test data:
+
+- `npm run em` - Starts emulators and loads previously saved data. When stopped (Ctrl+C), it saves any changes to the data directory.
+- `npm run em:fresh` - Starts emulators with a clean slate and runs the seeding script to populate with fresh test data. Changes are saved on exit.
+- `npm run seed` - Manually runs the database seeding script to populate with test data.
+
+Note: The data directory is gitignored to prevent committing test data. New developers should run `npm run em:fresh` to generate their initial test data.
+
+## Available Scripts
+
+- `npm run em` - Start emulators with data persistence
+- `npm run em:fresh` - Start emulators with fresh seeded data
+- `npm run seed` - Run the database seeding script
+- `npm run build` - Build TypeScript files
+- `npm run deploy` - Deploy functions to Firebase
+- `npm run logs` - View Firebase function logs
+
+## Deployment
+
+To deploy to production:
+
+1. Ensure you're logged in:
+
+```bash
+firebase login
+```
+
+2. Select the correct project:
+
+```bash
+firebase use habits-together
+```
+
+3. Deploy functions:
+
+```bash
+npm run deploy
+```
