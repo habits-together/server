@@ -82,3 +82,7 @@ firebase use habits-together
 ```bash
 npm run deploy
 ```
+
+### Windows port taken error
+
+To dubug port taken when running the emulator search `node.exe` and `java.exe` in task manager and kill those tasks then restart the emulator.

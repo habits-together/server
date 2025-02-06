@@ -10,3 +10,4 @@
 // Export all functions
 export { helloWorld } from "./utils";
 export { onUserWritten } from "./users";
+export { checkUserExistsInAuth } from "./auth";
