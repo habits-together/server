@@ -1,14 +1,4 @@
-import { initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
-
-// Set emulator host before initializing
-process.env.FIRESTORE_EMULATOR_HOST = "127.0.0.1:8080";
-
-initializeApp({
-  projectId: "habits-together",
-});
-
-const db = getFirestore();
+import { db } from "../utils/firebase"
 
 // Mock data from the app
 const mockUsers = [
